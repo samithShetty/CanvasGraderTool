@@ -1,16 +1,14 @@
-from canvasapi import Canvas
-from config import CANVAS_TOKEN, CANVAS_URL, COURSE_CODE
-import utils
+from utils.canvas_utils.canvas_grader import CanvasGrader
 
 
 if __name__ == "__main__":
-    # Initialize a new Canvas object
-    canvas = Canvas(CANVAS_URL, CANVAS_TOKEN)
-
-    course = canvas.get_course(COURSE_CODE)
-    print(course.name)
-
-    quiz = utils.list_select(course.get_quizzes())
-    submissions = [sub for sub in quiz.get_submissions()]
-    question = utils.list_select(submissions[0].get_submission_question())
-    print(question)
+    canvas = CanvasGrader()
+    
+    print(canvas.course.name)
+    assignment = canvas.user_select_assignment()
+    question_number = int(input("Select Question Number: "))
+    answer_dict = canvas.get_quiz_question_answers(assignment, question_number-1)
+    
+    for question_id in answer_dict:
+        print(f"{question_id} -> \t{answer_dict[question_id]}")
+        print("\n\n") 
